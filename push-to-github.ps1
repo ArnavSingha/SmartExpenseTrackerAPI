@@ -27,7 +27,11 @@ if ($remotes -contains "origin") {
     Write-Host "Added new origin remote." -ForegroundColor Green
 }
 
-Write-Host "`n[3/4] Staging all production source artifacts and documentation..." -ForegroundColor Yellow
+Write-Host "`n[3/4] Running automated Prettier formatting and staging files..." -ForegroundColor Yellow
+if (Test-Path "package.json") {
+    Write-Host "Executing Prettier code formatter to guarantee CI alignment..." -ForegroundColor Cyan
+    npm run format:write
+}
 git add .
 
 Write-Host "`n[4/4] Committing and pushing to public repository..." -ForegroundColor Green

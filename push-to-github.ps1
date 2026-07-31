@@ -28,6 +28,11 @@ if ($remotes -contains "origin") {
 }
 
 Write-Host "`n[3/4] Running automated Prettier formatting and staging files..." -ForegroundColor Yellow
+if (Test-Path ".eslintrc.cjs") {
+    Write-Host "Removing legacy .eslintrc.cjs in favor of ESLint 10 flat configuration..." -ForegroundColor Cyan
+    Remove-Item ".eslintrc.cjs" -Force -ErrorAction SilentlyContinue
+    if (Test-Path ".git") { git rm .eslintrc.cjs --ignore-unmatch 2>$null }
+}
 if (Test-Path "package.json") {
     Write-Host "Executing Prettier code formatter to guarantee CI alignment..." -ForegroundColor Cyan
     npm run format

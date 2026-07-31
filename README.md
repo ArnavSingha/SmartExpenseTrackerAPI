@@ -119,7 +119,7 @@ All operations begin at the prefix: `/api/expenses`
 ## ⚙️ Installation & Running Locally
 
 ### Prerequisites
-- **Node.js**: Version 18.x, 20.x, or 22.x+
+- **Node.js**: Version 20.x LTS or 22.x LTS+
 - **npm** or **pnpm**
 
 ### 1. Installation

@@ -38,8 +38,10 @@ export const validate = (config: ValidationConfig) => {
             return `${path}${issue.message}`;
           })
           .join(' ');
-        
-        return next(new ValidationError(errorMessage || 'Input validation failed against schema rules.'));
+
+        return next(
+          new ValidationError(errorMessage || 'Input validation failed against schema rules.'),
+        );
       }
       next(error);
     }

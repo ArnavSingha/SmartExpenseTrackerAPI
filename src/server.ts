@@ -14,7 +14,9 @@ const startServer = (): void => {
     /* eslint-disable no-console */
     console.info('====================================================');
     console.info(`🚀 Smart Expense Tracker API running on port ${port}`);
-    console.info(`📚 OpenAPI Swagger Docs available at: http://localhost:${port}${config.docsPrefix}`);
+    console.info(
+      `📚 OpenAPI Swagger Docs available at: http://localhost:${port}${config.docsPrefix}`,
+    );
     console.info(`📦 Persistent JSON Storage: ${config.storage.defaultFilePath}`);
     console.info('====================================================');
     /* eslint-enable no-console */

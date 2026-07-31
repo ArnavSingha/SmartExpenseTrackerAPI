@@ -1,5 +1,10 @@
 import crypto from 'crypto';
-import { Expense, CreateExpenseDTO, ExpenseSummary, CategoryBreakdown } from '../models/expense.model';
+import {
+  Expense,
+  CreateExpenseDTO,
+  ExpenseSummary,
+  CategoryBreakdown,
+} from '../models/expense.model';
 import { IExpenseRepository } from '../repositories/expense.repository.interface';
 import { ResourceNotFoundError } from '../models/api-error.model';
 
@@ -58,7 +63,7 @@ export class ExpenseService {
    */
   public async getSummary(): Promise<ExpenseSummary> {
     const allExpenses = await this.repository.findAll();
-    
+
     let total = 0;
     const byCategory: CategoryBreakdown = {};
 

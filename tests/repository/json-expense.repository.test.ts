@@ -75,13 +75,28 @@ describe('JsonExpenseRepository (Persistence & Concurrency Assurance)', () => {
 
     // Verify all IDs are intact without race condition overwrites
     const storedIds = finalRecords.map((r) => r.id).sort();
-    const expectedIds = Array.from({ length: CONCURRENT_TASKS }, (_, idx) => `concurrent-${idx}`).sort();
+    const expectedIds = Array.from(
+      { length: CONCURRENT_TASKS },
+      (_, idx) => `concurrent-${idx}`,
+    ).sort();
     expect(storedIds).toEqual(expectedIds);
   });
 
   it('removes target record and returns true, or returns false if UUID is missing', async () => {
-    const item1: Expense = { id: 'id-1', title: 'A', amount: 10, category: 'X', date: '2026-07-31' };
-    const item2: Expense = { id: 'id-2', title: 'B', amount: 20, category: 'Y', date: '2026-07-31' };
+    const item1: Expense = {
+      id: 'id-1',
+      title: 'A',
+      amount: 10,
+      category: 'X',
+      date: '2026-07-31',
+    };
+    const item2: Expense = {
+      id: 'id-2',
+      title: 'B',
+      amount: 20,
+      category: 'Y',
+      date: '2026-07-31',
+    };
     await repository.save(item1);
     await repository.save(item2);
 

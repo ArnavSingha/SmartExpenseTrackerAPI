@@ -54,7 +54,7 @@ describe('ExpenseService (Pure Domain Business Logic)', () => {
   it('creates an expense with a generated UUID and normalized trimmed fields', async () => {
     const dto: CreateExpenseDTO = {
       title: '   Client Coffee Meeting   ',
-      amount: 15.50,
+      amount: 15.5,
       category: '  Meals  ',
       date: ' 2026-07-31 ',
     };
@@ -66,12 +66,22 @@ describe('ExpenseService (Pure Domain Business Logic)', () => {
     expect(created.title).toBe('Client Coffee Meeting');
     expect(created.category).toBe('Meals');
     expect(created.date).toBe('2026-07-31');
-    expect(created.amount).toBe(15.50);
+    expect(created.amount).toBe(15.5);
   });
 
   it('rounds amounts to exactly two decimal places to prevent IEEE 754 precision drift', async () => {
-    const dto1: CreateExpenseDTO = { title: 'Item 1', amount: 10.104, category: 'Tech', date: '2026-07-31' };
-    const dto2: CreateExpenseDTO = { title: 'Item 2', amount: 20.206, category: 'Tech', date: '2026-07-31' };
+    const dto1: CreateExpenseDTO = {
+      title: 'Item 1',
+      amount: 10.104,
+      category: 'Tech',
+      date: '2026-07-31',
+    };
+    const dto2: CreateExpenseDTO = {
+      title: 'Item 2',
+      amount: 20.206,
+      category: 'Tech',
+      date: '2026-07-31',
+    };
 
     await service.createExpense(dto1);
     await service.createExpense(dto2);
@@ -84,9 +94,24 @@ describe('ExpenseService (Pure Domain Business Logic)', () => {
   });
 
   it('filters listed expenses by case-insensitive category tags', async () => {
-    await service.createExpense({ title: 'Lunch', amount: 20, category: 'Food', date: '2026-07-31' });
-    await service.createExpense({ title: 'Taxi', amount: 45, category: 'Travel', date: '2026-07-31' });
-    await service.createExpense({ title: 'Dinner', amount: 60, category: 'food', date: '2026-07-31' });
+    await service.createExpense({
+      title: 'Lunch',
+      amount: 20,
+      category: 'Food',
+      date: '2026-07-31',
+    });
+    await service.createExpense({
+      title: 'Taxi',
+      amount: 45,
+      category: 'Travel',
+      date: '2026-07-31',
+    });
+    await service.createExpense({
+      title: 'Dinner',
+      amount: 60,
+      category: 'food',
+      date: '2026-07-31',
+    });
 
     const foodExpenses = await service.listExpenses('FOOD');
     const travelExpenses = await service.listExpenses('Travel');
@@ -103,8 +128,13 @@ describe('ExpenseService (Pure Domain Business Logic)', () => {
   });
 
   it('deletes an existing expense record successfully', async () => {
-    const item = await service.createExpense({ title: 'To Delete', amount: 9.99, category: 'Misc', date: '2026-07-31' });
-    
+    const item = await service.createExpense({
+      title: 'To Delete',
+      amount: 9.99,
+      category: 'Misc',
+      date: '2026-07-31',
+    });
+
     await expect(service.deleteExpense(item.id)).resolves.toBeUndefined();
 
     const list = await service.listExpenses();
@@ -112,7 +142,8 @@ describe('ExpenseService (Pure Domain Business Logic)', () => {
   });
 
   it('throws ResourceNotFoundError when deleting a non-existent UUID', async () => {
-    await expect(service.deleteExpense('00000000-0000-0000-0000-000000000000'))
-      .rejects.toThrow(ResourceNotFoundError);
+    await expect(service.deleteExpense('00000000-0000-0000-0000-000000000000')).rejects.toThrow(
+      ResourceNotFoundError,
+    );
   });
 });

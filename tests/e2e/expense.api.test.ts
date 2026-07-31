@@ -26,7 +26,7 @@ describe('E2E REST API Integration Suite (Supertest)', () => {
     it('creates a valid expense and returns HTTP 201 Created with universal success envelope', async () => {
       const payload = {
         title: 'Monthly Cloud Server Hosting',
-        amount: 125.50,
+        amount: 125.5,
         category: 'Infrastructure',
         date: '2026-07-31',
       };
@@ -85,8 +85,12 @@ describe('E2E REST API Integration Suite (Supertest)', () => {
 
   describe('GET /api/expenses (Listing & Category Filtering)', () => {
     it('retrieves persistent list and filters accurately by category query parameter', async () => {
-      await request(app).post('/api/expenses').send({ title: 'Team Lunch', amount: 50, category: 'Meals', date: '2026-07-31' });
-      await request(app).post('/api/expenses').send({ title: 'Train Ticket', amount: 80, category: 'Transit', date: '2026-07-31' });
+      await request(app)
+        .post('/api/expenses')
+        .send({ title: 'Team Lunch', amount: 50, category: 'Meals', date: '2026-07-31' });
+      await request(app)
+        .post('/api/expenses')
+        .send({ title: 'Train Ticket', amount: 80, category: 'Transit', date: '2026-07-31' });
 
       const listAllRes = await request(app).get('/api/expenses');
       expect(listAllRes.status).toBe(200);

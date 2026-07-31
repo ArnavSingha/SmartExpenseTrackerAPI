@@ -8,7 +8,7 @@ import { InternalServerException } from '../models/api-error.model';
 /**
  * JsonExpenseRepository
  * Concrete persistence layer implementing local filesystem JSON storage.
- * 
+ *
  * Production Protections:
  * 1. Transactional Operation Mutex Lock: Guarantees that the entire read-modify-write
  *    cycle for concurrent requests executes sequentially, completely eliminating
@@ -56,7 +56,9 @@ export class JsonExpenseRepository implements IExpenseRepository {
       if (error?.code === 'ENOENT') {
         return [];
       }
-      throw new InternalServerException(`Corrupt JSON storage or disk read error at ${this.filePath}.`);
+      throw new InternalServerException(
+        `Corrupt JSON storage or disk read error at ${this.filePath}.`,
+      );
     }
   }
 
@@ -75,7 +77,9 @@ export class JsonExpenseRepository implements IExpenseRepository {
       // Atomic filesystem rename replaces old file instantly
       await fs.rename(tempPath, this.filePath);
     } catch (error: any) {
-      throw new InternalServerException(`Failed to persist expense storage atomically: ${error?.message || 'IO Error'}`);
+      throw new InternalServerException(
+        `Failed to persist expense storage atomically: ${error?.message || 'IO Error'}`,
+      );
     }
   }
 

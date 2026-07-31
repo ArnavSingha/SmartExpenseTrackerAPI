@@ -30,7 +30,7 @@ if ($remotes -contains "origin") {
 Write-Host "`n[3/4] Running automated Prettier formatting and staging files..." -ForegroundColor Yellow
 if (Test-Path "package.json") {
     Write-Host "Executing Prettier code formatter to guarantee CI alignment..." -ForegroundColor Cyan
-    npm run format:write
+    npm run format
 }
 git add .
 

@@ -25,12 +25,12 @@ export class ExpenseController {
     try {
       const input = req.body as CreateExpenseInput;
       const createdExpense = await this.service.createExpense(input);
-      
+
       const response: ApiSuccessPayload<Expense> = {
         success: true,
         data: createdExpense,
       };
-      
+
       res.status(201).json(response);
     } catch (error) {
       next(error);
@@ -45,12 +45,12 @@ export class ExpenseController {
     try {
       const { category } = req.query as FilterExpensesQuery;
       const expenses = await this.service.listExpenses(category);
-      
+
       const response: ApiSuccessPayload<Expense[]> = {
         success: true,
         data: expenses,
       };
-      
+
       res.status(200).json(response);
     } catch (error) {
       next(error);
@@ -64,12 +64,12 @@ export class ExpenseController {
   public summary = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const summaryData = await this.service.getSummary();
-      
+
       const response: ApiSuccessPayload<ExpenseSummary> = {
         success: true,
         data: summaryData,
       };
-      
+
       res.status(200).json(response);
     } catch (error) {
       next(error);
@@ -84,13 +84,13 @@ export class ExpenseController {
     try {
       const { id } = req.params as { id: string };
       await this.service.deleteExpense(id);
-      
+
       const response: ApiSuccessPayload<null> = {
         success: true,
         data: null,
         message: `Expense ${id} has been permanently deleted.`,
       };
-      
+
       res.status(200).json(response);
     } catch (error) {
       next(error);

@@ -13,7 +13,7 @@ import { ResourceNotFoundError } from './models/api-error.model';
  * Express Application Bootstrap Factory
  * Encourages clean dependency inversion and enables isolated E2E Supertest
  * execution by allowing ephemeral test storage file paths to be injected.
- * 
+ *
  * @param customStoragePath - Optional override for filesystem JSON location during test runs
  */
 export const createApp = (customStoragePath?: string): Express => {

@@ -40,7 +40,10 @@ export const createExpenseSchema = z.object({
       invalid_type_error: 'Date must be a string in ISO format (YYYY-MM-DD).',
     })
     .trim()
-    .regex(isoDateRegex, 'Date must be in valid ISO 8601 format (e.g. YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss.sssZ).')
+    .regex(
+      isoDateRegex,
+      'Date must be in valid ISO 8601 format (e.g. YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss.sssZ).',
+    )
     .refine((val) => !isNaN(Date.parse(val)), {
       message: 'Date contains an invalid calendar timestamp.',
     }),

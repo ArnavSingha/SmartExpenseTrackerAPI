@@ -1,0 +1,38 @@
+# Dependency directories
+node_modules/
+client/node_modules/
+
+# Compiled distribution builds
+dist/
+client/dist/
+client/.vite/
+coverage/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Debug logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Persistent local JSON data files (keep folder structure via .gitkeep)
+data/*.json
+!data/.gitkeep
+
+# Graphify / AI runtime scratch folders
+graphify-out/
+.agents/
+.gemini/
+
+# OS and Editor metadata
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo

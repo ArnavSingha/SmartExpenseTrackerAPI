@@ -1,0 +1,298 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Smart Expense Tracker API",
+    "description": "Production-grade REST API built for high reliability, atomic filesystem persistence, and precision financial calculations. Implemented by an autonomous elite software engineering team.",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Autonomous Engineering Organization",
+      "url": "https://github.com/autonomous-eng/smart-expense-tracker"
+    }
+  },
+  "servers": [
+    {
+      "url": "/api",
+      "description": "Primary REST API endpoint base path"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Expenses",
+      "description": "Lifecycle operations for managing and querying financial expenses"
+    }
+  ],
+  "paths": {
+    "/expenses": {
+      "post": {
+        "tags": ["Expenses"],
+        "summary": "Add a new expense record",
+        "description": "Creates and persists a validated financial expense item with an auto-generated UUID.",
+        "operationId": "addExpense",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateExpenseInput"
+              },
+              "example": {
+                "title": "Team Lunch at Chipotle",
+                "amount": 42.50,
+                "category": "Food",
+                "date": "2026-07-31"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Expense item successfully created and persisted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExpenseSuccessResponse"
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "id": "c7a82e9b-4b2a-4a30-8c9e-54921f0a2d1f",
+                    "title": "Team Lunch at Chipotle",
+                    "amount": 42.50,
+                    "category": "Food",
+                    "date": "2026-07-31"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failure against input schema or malformed JSON payload",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "success": false,
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "amount: Amount must be strictly greater than zero."
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Expenses"],
+        "summary": "List all expenses or filter by category",
+        "description": "Retrieves persistent expense items, optionally filtered by a case-insensitive category query parameter.",
+        "operationId": "listExpenses",
+        "parameters": [
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "description": "Case-insensitive category tag string to filter results (e.g. 'Food')",
+            "schema": {
+              "type": "string",
+              "example": "Food"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful retrieval of matching expense array",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExpenseListSuccessResponse"
+                },
+                "example": {
+                  "success": true,
+                  "data": [
+                    {
+                      "id": "c7a82e9b-4b2a-4a30-8c9e-54921f0a2d1f",
+                      "title": "Team Lunch at Chipotle",
+                      "amount": 42.50,
+                      "category": "Food",
+                      "date": "2026-07-31"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/expenses/summary": {
+      "get": {
+        "tags": ["Expenses"],
+        "summary": "Calculate aggregate totals and category breakdowns",
+        "description": "Computes exact decimal totals across all records and breaks down cumulative spending per normalized category.",
+        "operationId": "getExpenseSummary",
+        "responses": {
+          "200": {
+            "description": "Successful aggregate calculation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SummarySuccessResponse"
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "total": 142.50,
+                    "byCategory": {
+                      "Food": 42.50,
+                      "Travel": 100.00
+                    },
+                    "count": 2
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/expenses/{id}": {
+      "delete": {
+        "tags": ["Expenses"],
+        "summary": "Delete an expense record by ID",
+        "description": "Permanently purges an expense record from persistent storage matching the target UUID.",
+        "operationId": "deleteExpense",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Universally unique identifier (UUID) of the target expense item",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Expense successfully deleted from storage",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteSuccessResponse"
+                },
+                "example": {
+                  "success": true,
+                  "data": null,
+                  "message": "Expense c7a82e9b-4b2a-4a30-8c9e-54921f0a2d1f has been permanently deleted."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Target expense ID does not exist in records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "success": false,
+                  "error": {
+                    "code": "RESOURCE_NOT_FOUND",
+                    "message": "Expense with identifier 'c7a82e9b-4b2a-4a30-8c9e-54921f0a2d1f' does not exist in records."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Expense": {
+        "type": "object",
+        "required": ["id", "title", "amount", "category", "date"],
+        "properties": {
+          "id": { "type": "string", "format": "uuid", "description": "Auto-generated immutable UUID v4" },
+          "title": { "type": "string", "description": "Descriptive title of expense" },
+          "amount": { "type": "number", "format": "double", "description": "Monetary expenditure amount in decimals" },
+          "category": { "type": "string", "description": "Normalized category grouping tag" },
+          "date": { "type": "string", "format": "date", "description": "ISO 8601 YYYY-MM-DD date string" }
+        }
+      },
+      "CreateExpenseInput": {
+        "type": "object",
+        "required": ["title", "amount", "category", "date"],
+        "properties": {
+          "title": { "type": "string", "example": "Uber Ride to Airport" },
+          "amount": { "type": "number", "format": "double", "example": 54.20 },
+          "category": { "type": "string", "example": "Travel" },
+          "date": { "type": "string", "format": "date", "example": "2026-07-31" }
+        }
+      },
+      "ExpenseSuccessResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": true },
+          "data": { "$ref": "#/components/schemas/Expense" }
+        }
+      },
+      "ExpenseListSuccessResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": true },
+          "data": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Expense" }
+          }
+        }
+      },
+      "SummarySuccessResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": true },
+          "data": {
+            "type": "object",
+            "properties": {
+              "total": { "type": "number", "format": "double", "example": 142.50 },
+              "byCategory": {
+                "type": "object",
+                "additionalProperties": { "type": "number", "format": "double" },
+                "example": { "Food": 42.50, "Travel": 100.00 }
+              },
+              "count": { "type": "integer", "example": 2 }
+            }
+          }
+        }
+      },
+      "DeleteSuccessResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": true },
+          "data": { "nullable": true, "example": null },
+          "message": { "type": "string", "example": "Expense has been permanently deleted." }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": false },
+          "error": {
+            "type": "object",
+            "required": ["code", "message"],
+            "properties": {
+              "code": { "type": "string", "example": "VALIDATION_ERROR" },
+              "message": { "type": "string", "example": "Descriptive human-readable error summary." }
+            }
+          }
+        }
+      }
+    }
+  }
+}
